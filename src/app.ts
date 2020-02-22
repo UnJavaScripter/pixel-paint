@@ -31,6 +31,10 @@ class PixelPaint {
       this.handleDrag(event);
     });
 
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+      this.handleKeyUp(event);
+    });
+
     window.addEventListener('keyup', (event: KeyboardEvent) => {
       this.handleKeyDown(event);
     });
@@ -113,14 +117,21 @@ class PixelPaint {
     }
   }
 
-  private handleKeyDown(event: KeyboardEvent) {
-    event.preventDefault()
+  private handleKeyUp(event: KeyboardEvent) {
     if (event.keyCode === 90) {
       if (event.ctrlKey) {
         this.undo();
       }
     }
   }
+  private handleKeyDown(event: KeyboardEvent) {
+    if (event.keyCode === 90) {
+      if (event.ctrlKey) {
+        this.undo();
+      }
+    }
+  }
+
 
   private undo() {
     this.history.pop();

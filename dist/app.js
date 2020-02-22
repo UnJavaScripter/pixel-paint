@@ -26,6 +26,9 @@ var PixelPaint = /** @class */ (function () {
         this.canvasElem.addEventListener('mousemove', function (event) {
             _this.handleDrag(event);
         });
+        window.addEventListener('keydown', function (event) {
+            _this.handleKeyUp(event);
+        });
         window.addEventListener('keyup', function (event) {
             _this.handleKeyDown(event);
         });
@@ -95,8 +98,14 @@ var PixelPaint = /** @class */ (function () {
             }
         }
     };
+    PixelPaint.prototype.handleKeyUp = function (event) {
+        if (event.keyCode === 90) {
+            if (event.ctrlKey) {
+                this.undo();
+            }
+        }
+    };
     PixelPaint.prototype.handleKeyDown = function (event) {
-        event.preventDefault();
         if (event.keyCode === 90) {
             if (event.ctrlKey) {
                 this.undo();

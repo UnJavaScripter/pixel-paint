@@ -20,13 +20,11 @@ class PixelPaint {
     this.canvasElem.width = width;
     this.canvasElem.height = height;
     this.lastDrawnPixel = {};
-    this.historyHandler = new HistoryHandler()
+    this.historyHandler = new HistoryHandler();
     this.init();
   }
 
   init() {
-    console.log('init')
-
     this.canvasElem.addEventListener('mouseup', () => {
       this.handleMouseUp();
     });
@@ -46,20 +44,20 @@ class PixelPaint {
     this.drawGrid();
   }
 
-  private handleMouseUp(): void {
+  private handleMouseUp() {
     this.clicked = false;
   }
 
-  private handleClick(event: MouseEvent): void {
+  private handleClick(event: MouseEvent) {
     this.clicked = true;
     this.pointerDraw(event);
   }
 
-  private handleDrag(event: MouseEvent): void {
+  private handleDrag(event: MouseEvent) {
     this.pointerDraw(event);
   }
 
-  private pointerDraw(event: MouseEvent): void {
+  private pointerDraw(event: MouseEvent) {
     if (this.clicked) {
       const correctedX = event.x - 9;
       const correctedY = event.y - 9;
@@ -68,7 +66,7 @@ class PixelPaint {
 
   }
 
-  private drawPixel(x: number, y: number, color = "#ca0e51", isHistoryEvent = false): void {
+  private drawPixel(x: number, y: number, color = "#ca0e51", isHistoryEvent = false) {
     const pixelXstart = x - (x % this.pixelSize);
     const pixelYstart = y - (y % this.pixelSize);
 
@@ -89,9 +87,9 @@ class PixelPaint {
     // this.ctx.fillText(`${pixelXstart}, ${pixelYstart}`, pixelXstart, pixelYstart, 800);
   }
 
-  private drawGrid(): void {
-    this.ctx.fillStyle = '#666'
-    this.ctx.strokeStyle = '#0ff'
+  private drawGrid() {
+    this.ctx.fillStyle = '#666';
+    this.ctx.strokeStyle = '#0ff';
 
     this.ctx.fillRect(0, 0, this.canvasElem.width, this.canvasElem.height);
     this.ctx.strokeRect(0, 0, this.canvasElem.width, this.canvasElem.height);
@@ -117,8 +115,8 @@ class PixelPaint {
       const y = Math.floor(Math.random() * lastY + 200 || this.canvasElem.height);
       this.drawPixel(x, y);
       if (lastX <= 0) {
-        lastX = x
-        lastY = y
+        lastX = x;
+        lastY = y;
       }
     }
   }
@@ -159,4 +157,4 @@ class PixelPaint {
 
 }
 
-new PixelPaint()
+new PixelPaint();

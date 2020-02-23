@@ -12,7 +12,6 @@ class PixelPaint {
         this.init();
     }
     init() {
-        console.log('init');
         this.canvasElem.addEventListener('mouseup', () => {
             this.handleMouseUp();
         });

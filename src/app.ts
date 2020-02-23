@@ -1,10 +1,17 @@
+import { HistoryHandler } from './history.js';
+
+export interface DrawAction {
+  x: number;
+  y: number;
+  color: string;
+}
 class PixelPaint {
   canvasElem: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   clicked = false;
   pixelSize: number;
-  history: any = [];
   lastDrawnPixel: any;
+  historyHandler: any;
 
   constructor(pixelSize = 20, width = window.innerWidth, height = window.innerHeight - 15) {
     this.canvasElem = <HTMLCanvasElement>document.getElementById('canvas');
@@ -13,6 +20,7 @@ class PixelPaint {
     this.canvasElem.width = width;
     this.canvasElem.height = height;
     this.lastDrawnPixel = {};
+    this.historyHandler = new HistoryHandler()
     this.init();
   }
 
@@ -33,10 +41,6 @@ class PixelPaint {
 
     window.addEventListener('keydown', (event: KeyboardEvent) => {
       this.handleKeyUp(event);
-    });
-
-    window.addEventListener('keyup', (event: KeyboardEvent) => {
-      this.handleKeyDown(event);
     });
 
     this.drawGrid();
@@ -64,7 +68,7 @@ class PixelPaint {
 
   }
 
-  private drawPixel(x: number, y: number, isHistoryEvent = false): void {
+  private drawPixel(x: number, y: number, color = "#ca0e51", isHistoryEvent = false): void {
     const pixelXstart = x - (x % this.pixelSize);
     const pixelYstart = y - (y % this.pixelSize);
     if(pixelXstart === this.lastDrawnPixel.x && pixelYstart === this.lastDrawnPixel.y) {
@@ -75,12 +79,12 @@ class PixelPaint {
     this.lastDrawnPixel.y = pixelYstart;
 
     if (!isHistoryEvent) {
-      this.history.push([pixelXstart, pixelYstart]);
+      this.historyHandler.push({x: pixelXstart, y: pixelYstart, color});
     }
-    this.ctx.fillStyle = '#ca0e51';
+    this.ctx.fillStyle = color;
     this.ctx.fillRect(pixelXstart, pixelYstart, this.pixelSize, this.pixelSize);
-    console.log('drawn')
-    console.log(this.history.length)
+    
+    // this.ctx.fillText(`${pixelXstart}, ${pixelYstart}`, pixelXstart, pixelYstart, 800);
   }
 
   private drawGrid(): void {
@@ -118,34 +122,37 @@ class PixelPaint {
   }
 
   private handleKeyUp(event: KeyboardEvent) {
+    if (event.keyCode === 89) {
+      if (event.ctrlKey) {
+        this.redo();
+      }
+    }
     if (event.keyCode === 90) {
       if (event.ctrlKey) {
         this.undo();
       }
     }
   }
-  private handleKeyDown(event: KeyboardEvent) {
-    if (event.keyCode === 90) {
-      if (event.ctrlKey) {
-        this.undo();
-      }
-    }
-  }
-
 
   private undo() {
-    this.history.pop();
+    this.historyHandler.undo();
+    this.reDraw();
+  }
+
+  private redo() {
+    this.historyHandler.redo();
+    this.reDraw();
+  }
+
+  private reDraw() {
     const raf = requestAnimationFrame(() => {
       this.ctx.clearRect(0, 0, this.canvasElem.width, this.canvasElem.height);
       this.drawGrid()
-      this.history.forEach((element: any) => {
-        console.log(element)
-        this.drawPixel(element[0], element[1], true);
-        cancelAnimationFrame(raf);
-      });
-      this.lastDrawnPixel = {};
+      this.historyHandler.history.forEach((element: DrawAction, key: number) => {
+        this.drawPixel(element.x, element.y, element.color, true);
+      })
+      cancelAnimationFrame(raf);
     });
-    console.log(this.history.length)
   }
 
 }

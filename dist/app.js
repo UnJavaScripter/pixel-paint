@@ -47,11 +47,12 @@ class PixelPaint {
     drawPixel(x, y, color = "#ca0e51", isHistoryEvent = false) {
         const pixelXstart = x - (x % this.pixelSize);
         const pixelYstart = y - (y % this.pixelSize);
-        if (pixelXstart === this.lastDrawnPixel.x && pixelYstart === this.lastDrawnPixel.y) {
+        if (pixelXstart === this.lastDrawnPixel.x && pixelYstart === this.lastDrawnPixel.y && color === this.lastDrawnPixel.color) {
             return;
         }
         this.lastDrawnPixel.x = pixelXstart;
         this.lastDrawnPixel.y = pixelYstart;
+        this.lastDrawnPixel.color = color;
         if (!isHistoryEvent) {
             this.historyHandler.push({ x: pixelXstart, y: pixelYstart, color });
         }

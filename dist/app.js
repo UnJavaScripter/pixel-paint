@@ -25,6 +25,7 @@ class PixelPaint {
             this.handleKeyUp(event);
         });
         this.drawGrid();
+        this.ranDraw(600);
     }
     handleMouseUp() {
         this.clicked = false;
@@ -80,8 +81,8 @@ class PixelPaint {
         let lastX = 0;
         let lastY = 0;
         for (let i = 0; i <= pixelAmount; i++) {
-            const x = Math.floor(Math.random() * lastX + 200 || this.canvasElem.width);
-            const y = Math.floor(Math.random() * lastY + 200 || this.canvasElem.height);
+            const x = Math.floor(Math.random() * lastX || this.canvasElem.width);
+            const y = Math.floor(Math.random() * lastY || this.canvasElem.height);
             this.drawPixel(x, y);
             if (lastX <= 0) {
                 lastX = x;

@@ -16,10 +16,10 @@ class PixelPaint {
         this.canvasElem.addEventListener('mouseup', () => {
             this.handleMouseUp();
         });
-        this.canvasElem.addEventListener('mousedown', (event) => {
+        this.canvasElem.addEventListener('pointerdown', (event) => {
             this.handleClick(event);
         });
-        this.canvasElem.addEventListener('mousemove', (event) => {
+        this.canvasElem.addEventListener('pointermove', (event) => {
             this.handleDrag(event);
         });
         window.addEventListener('keydown', (event) => {

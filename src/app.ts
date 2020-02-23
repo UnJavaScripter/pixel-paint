@@ -31,11 +31,11 @@ class PixelPaint {
       this.handleMouseUp();
     });
 
-    this.canvasElem.addEventListener('mousedown', (event: MouseEvent) => {
+    this.canvasElem.addEventListener('pointerdown', (event: PointerEvent) => {
       this.handleClick(event);
     });
 
-    this.canvasElem.addEventListener('mousemove', (event: MouseEvent) => {
+    this.canvasElem.addEventListener('pointermove', (event: PointerEvent) => {
       this.handleDrag(event);
     });
 
@@ -71,7 +71,7 @@ class PixelPaint {
   private drawPixel(x: number, y: number, color = "#ca0e51", isHistoryEvent = false): void {
     const pixelXstart = x - (x % this.pixelSize);
     const pixelYstart = y - (y % this.pixelSize);
-    
+
     if(pixelXstart === this.lastDrawnPixel.x && pixelYstart === this.lastDrawnPixel.y && color === this.lastDrawnPixel.color) {
       return;
     }

@@ -25,7 +25,6 @@ class PixelPaint {
             this.handleKeyUp(event);
         });
         this.drawGrid();
-        this.ranDraw(600);
     }
     handleMouseUp() {
         this.clicked = false;

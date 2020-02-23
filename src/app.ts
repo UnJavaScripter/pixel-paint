@@ -42,7 +42,6 @@ class PixelPaint {
     });
 
     this.drawGrid();
-    this.ranDraw(600);
   }
 
   private handleMouseUp() {

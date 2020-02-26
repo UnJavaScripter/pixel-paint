@@ -1,4 +1,7 @@
 import { HistoryHandler } from './history.js';
+import { ColorPicker } from './color-picker.js';
+
+const colorPicker = new ColorPicker();
 
 export interface DrawAction {
   x: number;
@@ -12,8 +15,9 @@ class PixelPaint {
   pixelSize: number;
   lastDrawnPixel: any;
   historyHandler: any;
+  selectedColor: string;
 
-  constructor(pixelSize = 20, width = window.innerWidth, height = window.innerHeight - 15) {
+  constructor(pixelSize = 20, width = window.innerWidth, height = window.innerHeight - 4) {
     this.canvasElem = <HTMLCanvasElement>document.getElementById('canvas');
     this.ctx = <CanvasRenderingContext2D>this.canvasElem.getContext('2d');
     this.pixelSize = pixelSize;
@@ -21,6 +25,7 @@ class PixelPaint {
     this.canvasElem.height = height;
     this.lastDrawnPixel = {};
     this.historyHandler = new HistoryHandler();
+    this.selectedColor = colorPicker.selectedColor;
     this.init();
   }
 
@@ -58,10 +63,10 @@ class PixelPaint {
   }
 
   private pointerDraw(event: MouseEvent) {
-    if (this.clicked) {
+    if (event.buttons === 1) {
       const correctedX = event.x - 9;
       const correctedY = event.y - 9;
-      this.drawPixel(correctedX, correctedY);
+      this.drawPixel(correctedX, correctedY, colorPicker.selectedColor);
     }
 
   }
@@ -84,7 +89,7 @@ class PixelPaint {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(pixelXstart, pixelYstart, this.pixelSize, this.pixelSize);
     
-    // this.ctx.fillText(`${pixelXstart}, ${pixelYstart}`, pixelXstart, pixelYstart, 800);
+    this.ctx.fillText(`${pixelXstart}, ${pixelYstart}`, pixelXstart, pixelYstart, 800);
   }
 
   private drawGrid() {

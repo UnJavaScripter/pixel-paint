@@ -5,9 +5,6 @@ export class HistoryHandler {
         this.historySize = 0;
         this.historyRedo = new Map();
     }
-    get history() {
-        return this._history;
-    }
     push(action) {
         if (this.historyRedo.size) {
             this.historyRedo.clear();
@@ -28,8 +25,11 @@ export class HistoryHandler {
         const historyRedoSize = this.historyRedo.size;
         if (historyRedoSize) {
             const lastHistoryRedoElem = this.historyRedo.get(historyRedoSize - 1);
-            this.history.set(this._history.size, lastHistoryRedoElem);
+            this._history.set(this._history.size, lastHistoryRedoElem);
             this.historyRedo.delete(historyRedoSize - 1);
         }
+    }
+    get history() {
+        return this._history;
     }
 }

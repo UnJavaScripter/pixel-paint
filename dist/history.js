@@ -1,4 +1,4 @@
-export class HistoryHandler {
+class HistoryHandler {
     constructor() {
         this.historySize = 0;
         this._history = new Map();
@@ -29,7 +29,13 @@ export class HistoryHandler {
             this.historyRedo.delete(historyRedoSize - 1);
         }
     }
+    clear() {
+        this._history = new Map();
+        this.historySize = 0;
+        this.historyRedo = new Map();
+    }
     get history() {
         return this._history;
     }
 }
+export const historyHandler = new HistoryHandler();

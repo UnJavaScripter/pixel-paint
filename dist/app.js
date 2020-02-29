@@ -1,6 +1,15 @@
-import { HistoryHandler } from './history.js';
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+import { historyHandler } from './history.js';
 import { ColorPicker } from './color-picker.js';
-import { savePicture, saveType } from './save.js';
+import { saveHandler } from './save.js';
 const colorPicker = new ColorPicker();
 class PixelPaint {
     constructor(pixelSize = 20, width = window.innerWidth, height = window.innerHeight - 4) {
@@ -11,8 +20,8 @@ class PixelPaint {
         this.canvasElem.width = width;
         this.canvasElem.height = height;
         this.lastDrawnPixel = {};
-        this.historyHandler = new HistoryHandler();
         this.selectedColor = colorPicker.selectedColor;
+        this.drawning = { fileHandle: undefined };
         this.init();
     }
     init() {
@@ -47,7 +56,7 @@ class PixelPaint {
             this.drawPixel(correctedX, correctedY, colorPicker.selectedColor);
         }
     }
-    drawPixel(x, y, color = "#ca0e51", isHistoryEvent = false) {
+    drawPixel(x, y, color = '#ca0e51', isHistoryEvent = false) {
         const pixelXstart = x - (x % this.pixelSize);
         const pixelYstart = y - (y % this.pixelSize);
         if (pixelXstart === this.lastDrawnPixel.x && pixelYstart === this.lastDrawnPixel.y && color === this.lastDrawnPixel.color) {
@@ -57,7 +66,7 @@ class PixelPaint {
         this.lastDrawnPixel.y = pixelYstart;
         this.lastDrawnPixel.color = color;
         if (!isHistoryEvent) {
-            this.historyHandler.push({ x: pixelXstart, y: pixelYstart, color });
+            historyHandler.push({ x: pixelXstart, y: pixelYstart, color });
         }
         this.ctx.fillStyle = color;
         this.ctx.fillRect(pixelXstart, pixelYstart, this.pixelSize, this.pixelSize);
@@ -94,6 +103,12 @@ class PixelPaint {
         }
     }
     handleKeyUp(event) {
+        if (event.keyCode === 78) {
+            if (event.ctrlKey) {
+                event.preventDefault();
+                this.discardAndNew();
+            }
+        }
         if (event.keyCode === 83) {
             if (event.ctrlKey) {
                 event.preventDefault();
@@ -111,23 +126,45 @@ class PixelPaint {
             }
         }
     }
+    getNewFileHandle() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const opts = {
+                type: 'saveFile',
+                accepts: [{
+                        description: 'Pixel Art image',
+                        extensions: ['png'],
+                        mimeTypes: ['image/png'],
+                    }],
+            };
+            const handle = window.chooseFileSystemEntries(opts);
+            return handle;
+        });
+    }
     save() {
         this.ctx.clearRect(0, 0, this.canvasElem.width, this.canvasElem.height);
         this.reDrawPixelsFromHistory();
-        this.canvasElem.toBlob((blob) => {
+        this.canvasElem.toBlob((blob) => __awaiter(this, void 0, void 0, function* () {
             if (!blob) {
                 return;
             }
-            savePicture.save(blob, saveType.Download, 'pixelart.png');
+            if ('chooseFileSystemEntries' in window) {
+                if (!this.drawning.fileHandle) {
+                    this.drawning.fileHandle = yield this.getNewFileHandle();
+                }
+                saveHandler.saveWithNativeFS(blob, this.drawning.fileHandle);
+            }
+            else {
+                saveHandler.saveAsDownload(blob, 'pixel-art.png');
+            }
             this.reDraw();
-        });
+        }));
     }
     undo() {
-        this.historyHandler.undo();
+        historyHandler.undo();
         this.reDraw();
     }
     redo() {
-        this.historyHandler.redo();
+        historyHandler.redo();
         this.reDraw();
     }
     reDraw() {
@@ -139,9 +176,15 @@ class PixelPaint {
         });
     }
     reDrawPixelsFromHistory() {
-        this.historyHandler.history.forEach((element, key) => {
+        historyHandler.history.forEach((element, key) => {
             this.drawPixel(element.x, element.y, element.color, true);
         });
+    }
+    discardAndNew() {
+        this.drawning.fileHandle = undefined;
+        historyHandler.clear();
+        this.ctx.clearRect(0, 0, this.canvasElem.width, this.canvasElem.height);
+        this.drawGrid();
     }
 }
 new PixelPaint();

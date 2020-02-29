@@ -1,6 +1,6 @@
-import { HistoryHandler } from './history.js';
+import { historyHandler } from './history.js';
 import { ColorPicker } from './color-picker.js';
-import { savePicture, saveType } from './save.js'
+import { saveHandler } from './save.js'
 
 const colorPicker = new ColorPicker();
 
@@ -9,14 +9,20 @@ export interface DrawAction {
   y: number;
   color: string;
 }
+
+interface Drawning {
+  fileHandle: any
+}
+
 class PixelPaint {
   canvasElem: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   clicked = false;
   pixelSize: number;
   lastDrawnPixel: any;
-  historyHandler: any;
   selectedColor: string;
+  drawning: Drawning;
+
 
   constructor(pixelSize = 20, width = window.innerWidth, height = window.innerHeight - 4) {
     this.canvasElem = <HTMLCanvasElement>document.getElementById('canvas');
@@ -25,8 +31,10 @@ class PixelPaint {
     this.canvasElem.width = width;
     this.canvasElem.height = height;
     this.lastDrawnPixel = {};
-    this.historyHandler = new HistoryHandler();
     this.selectedColor = colorPicker.selectedColor;
+
+    this.drawning = {fileHandle: undefined};
+
     this.init();
   }
 
@@ -72,7 +80,7 @@ class PixelPaint {
 
   }
 
-  private drawPixel(x: number, y: number, color = "#ca0e51", isHistoryEvent = false) {
+  private drawPixel(x: number, y: number, color = '#ca0e51', isHistoryEvent = false) {
     const pixelXstart = x - (x % this.pixelSize);
     const pixelYstart = y - (y % this.pixelSize);
 
@@ -85,7 +93,7 @@ class PixelPaint {
     this.lastDrawnPixel.color = color;
 
     if (!isHistoryEvent) {
-      this.historyHandler.push({x: pixelXstart, y: pixelYstart, color});
+      historyHandler.push({x: pixelXstart, y: pixelYstart, color});
     }
     this.ctx.fillStyle = color;
     this.ctx.fillRect(pixelXstart, pixelYstart, this.pixelSize, this.pixelSize);
@@ -128,6 +136,12 @@ class PixelPaint {
   }
 
   private handleKeyUp(event: KeyboardEvent) {
+    if (event.keyCode === 78) {
+      if (event.ctrlKey) {
+        event.preventDefault();
+        this.discardAndNew();
+      }
+    }
     if (event.keyCode === 83) {
       if (event.ctrlKey) {
         event.preventDefault();
@@ -146,25 +160,46 @@ class PixelPaint {
     }
   }
 
+  private async getNewFileHandle() {
+    const opts = {
+      type: 'saveFile',
+      accepts: [{
+        description: 'Pixel Art image',
+        extensions: ['png'],
+        mimeTypes: ['image/png'],
+      }],
+    };
+    const handle = (window as any).chooseFileSystemEntries(opts);
+    
+    return handle;
+  }
+
   private save() {
     this.ctx.clearRect(0, 0, this.canvasElem.width, this.canvasElem.height);
     this.reDrawPixelsFromHistory();
-    this.canvasElem.toBlob((blob) => {
+    this.canvasElem.toBlob( async (blob) =>  {
       if(!blob) {
         return;
       }
-      savePicture.save(blob, saveType.Download, 'pixelart.png');
+      if('chooseFileSystemEntries' in window) {
+        if(!this.drawning.fileHandle) {
+          this.drawning.fileHandle = await this.getNewFileHandle();
+        }
+        saveHandler.saveWithNativeFS(blob, this.drawning.fileHandle);
+      } else {
+        saveHandler.saveAsDownload(blob, 'pixel-art.png');
+      }
       this.reDraw();
     });
   }
 
   private undo() {
-    this.historyHandler.undo();
+    historyHandler.undo();
     this.reDraw();
   }
 
   private redo() {
-    this.historyHandler.redo();
+    historyHandler.redo();
     this.reDraw();
   }
 
@@ -178,9 +213,16 @@ class PixelPaint {
   }
 
   private reDrawPixelsFromHistory() {
-    this.historyHandler.history.forEach((element: DrawAction, key: number) => {
+    historyHandler.history.forEach((element: DrawAction, key: number) => {
       this.drawPixel(element.x, element.y, element.color, true);
     });
+  }
+
+  private discardAndNew() {
+    this.drawning.fileHandle = undefined;
+    historyHandler.clear();
+    this.ctx.clearRect(0, 0, this.canvasElem.width, this.canvasElem.height);
+    this.drawGrid();
   }
 
 }

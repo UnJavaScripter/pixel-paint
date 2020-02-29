@@ -61,7 +61,7 @@ export class ColorPicker {
     }
     initHoverHandler() {
         document.addEventListener('pointermove', (event) => {
-            if (event.y > window.innerHeight - 15 && event.buttons === 0) {
+            if (event.y > window.innerHeight - 25 && event.buttons === 0) {
                 this.pickerElem.style.transform = 'translateX(-50%) translateY(0)';
             }
         });

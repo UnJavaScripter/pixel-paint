@@ -1,6 +1,6 @@
 import { DrawAction } from './app'
 
-export class HistoryHandler {
+class HistoryHandler {
   _history: Map<number, DrawAction>;
   historySize = 0;
   historyRedo: Map<number, DrawAction>;
@@ -38,8 +38,16 @@ export class HistoryHandler {
     }
   }
 
+  clear() {
+    this._history = new Map();
+    this.historySize = 0;
+    this.historyRedo = new Map();
+  }
+
   get history() {
     return this._history;
   }
 
 }
+
+export const historyHandler = new HistoryHandler();

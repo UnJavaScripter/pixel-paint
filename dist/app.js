@@ -12,7 +12,7 @@ import { ColorPicker } from './color-picker.js';
 import { saveHandler } from './save.js';
 const colorPicker = new ColorPicker();
 class PixelPaint {
-    constructor(pixelSize = 50, width = window.innerWidth, height = window.innerHeight - 4) {
+    constructor(pixelSize = 80, width = window.innerWidth, height = window.innerHeight - 4) {
         this.clicked = false;
         this.canvasElem = document.getElementById('canvas');
         this.ctx = this.canvasElem.getContext('2d');

@@ -4,6 +4,8 @@
 
 This is an **educational** web based pixel art drawing app using HTML Canvas and vanilla JavaScript.
 
+![Pixel Paint - an HTML canvas drawing web app](https://user-images.githubusercontent.com/7959823/75613676-bf0bc980-5b30-11ea-9c7b-42e80f87beb4.gif)
+
 ## Features
 
 - Basic drawing
@@ -26,6 +28,7 @@ You will learn some use cases of:
 
 - Erasing
 - Undo a whole drawning instead of just the individual pixels
+- Pointer events behaviour (for touch enabled devices)
 - An app UI
 - Toasts
 
@@ -34,4 +37,4 @@ You will learn some use cases of:
 - Tests
 - Error handling
 - Initial settings
-
+- A11y

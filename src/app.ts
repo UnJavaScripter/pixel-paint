@@ -1,5 +1,6 @@
 import { HistoryHandler } from './history.js';
 import { ColorPicker } from './color-picker.js';
+import { savePicture, saveType } from './save.js'
 
 const colorPicker = new ColorPicker();
 
@@ -127,6 +128,12 @@ class PixelPaint {
   }
 
   private handleKeyUp(event: KeyboardEvent) {
+    if (event.keyCode === 83) {
+      if (event.ctrlKey) {
+        event.preventDefault();
+        this.save();
+      }
+    }
     if (event.keyCode === 89) {
       if (event.ctrlKey) {
         this.redo();
@@ -137,6 +144,18 @@ class PixelPaint {
         this.undo();
       }
     }
+  }
+
+  private save() {
+    this.ctx.clearRect(0, 0, this.canvasElem.width, this.canvasElem.height);
+    this.reDrawPixelsFromHistory();
+    this.canvasElem.toBlob((blob) => {
+      if(!blob) {
+        return;
+      }
+      savePicture.save(blob, saveType.Download, 'pixelart.png');
+      this.reDraw();
+    });
   }
 
   private undo() {
@@ -152,11 +171,15 @@ class PixelPaint {
   private reDraw() {
     const raf = requestAnimationFrame(() => {
       this.ctx.clearRect(0, 0, this.canvasElem.width, this.canvasElem.height);
-      this.drawGrid()
-      this.historyHandler.history.forEach((element: DrawAction, key: number) => {
-        this.drawPixel(element.x, element.y, element.color, true);
-      })
+      this.drawGrid();
+      this.reDrawPixelsFromHistory();
       cancelAnimationFrame(raf);
+    });
+  }
+
+  private reDrawPixelsFromHistory() {
+    this.historyHandler.history.forEach((element: DrawAction, key: number) => {
+      this.drawPixel(element.x, element.y, element.color, true);
     });
   }
 

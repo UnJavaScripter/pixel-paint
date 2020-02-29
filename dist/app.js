@@ -1,5 +1,6 @@
 import { HistoryHandler } from './history.js';
 import { ColorPicker } from './color-picker.js';
+import { savePicture, saveType } from './save.js';
 const colorPicker = new ColorPicker();
 class PixelPaint {
     constructor(pixelSize = 20, width = window.innerWidth, height = window.innerHeight - 4) {
@@ -93,6 +94,12 @@ class PixelPaint {
         }
     }
     handleKeyUp(event) {
+        if (event.keyCode === 83) {
+            if (event.ctrlKey) {
+                event.preventDefault();
+                this.save();
+            }
+        }
         if (event.keyCode === 89) {
             if (event.ctrlKey) {
                 this.redo();
@@ -103,6 +110,17 @@ class PixelPaint {
                 this.undo();
             }
         }
+    }
+    save() {
+        this.ctx.clearRect(0, 0, this.canvasElem.width, this.canvasElem.height);
+        this.reDrawPixelsFromHistory();
+        this.canvasElem.toBlob((blob) => {
+            if (!blob) {
+                return;
+            }
+            savePicture.save(blob, saveType.Download, 'pixelart.png');
+            this.reDraw();
+        });
     }
     undo() {
         this.historyHandler.undo();
@@ -116,10 +134,13 @@ class PixelPaint {
         const raf = requestAnimationFrame(() => {
             this.ctx.clearRect(0, 0, this.canvasElem.width, this.canvasElem.height);
             this.drawGrid();
-            this.historyHandler.history.forEach((element, key) => {
-                this.drawPixel(element.x, element.y, element.color, true);
-            });
+            this.reDrawPixelsFromHistory();
             cancelAnimationFrame(raf);
+        });
+    }
+    reDrawPixelsFromHistory() {
+        this.historyHandler.history.forEach((element, key) => {
+            this.drawPixel(element.x, element.y, element.color, true);
         });
     }
 }

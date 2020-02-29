@@ -24,7 +24,7 @@ class PixelPaint {
   drawning: Drawning;
 
 
-  constructor(pixelSize = 80, width = window.innerWidth, height = window.innerHeight - 4) {
+  constructor(pixelSize = 50, width = window.innerWidth, height = window.innerHeight - 4) {
     this.canvasElem = <HTMLCanvasElement>document.getElementById('canvas');
     this.ctx = <CanvasRenderingContext2D>this.canvasElem.getContext('2d');
     this.pixelSize = pixelSize;

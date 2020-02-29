@@ -2,6 +2,7 @@ export class ColorPicker {
   pickerElem: HTMLDivElement;
   colorsList: string[];
   _selectedColor: string;
+  isPickerOpened = false;
 
   constructor() {
     this.pickerElem = document.createElement('div');
@@ -24,12 +25,21 @@ export class ColorPicker {
       '#000080'];
     this._selectedColor = this.colorsList[0]
     this.init();
-    this.initHoverHandler();
   }
 
   init() {
+    this.pickerElem.addEventListener('pointerenter', (event: PointerEvent) => {
+      if(!this.isPickerOpened && event.buttons === 0) {
+        this.pickerElem.style.transform = 'translateX(-50%) translateY(0)';
+        this.isPickerOpened = true;
+      }
+    });
+
     this.pickerElem.addEventListener('pointerleave', (event: PointerEvent) => {
-      this.pickerElem.style.transform = 'translateX(-50%) translateY(90%)';
+      if(this.isPickerOpened) {
+        this.pickerElem.style.transform = 'translateX(-50%) translateY(90%)';
+        this.isPickerOpened = false;
+      }
     });
 
     for (let i = 0; i < this.colorsList.length; i++) {
@@ -69,13 +79,5 @@ export class ColorPicker {
 
   get selectedColor() {
     return this._selectedColor;
-  }
-
-  initHoverHandler() {
-    document.addEventListener('pointermove', (event: PointerEvent) => {
-      if (event.y > window.innerHeight - 25 && event.buttons === 0) {
-        this.pickerElem.style.transform = 'translateX(-50%) translateY(0)';
-      }
-    });
   }
 }

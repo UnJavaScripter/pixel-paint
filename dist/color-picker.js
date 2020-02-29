@@ -1,5 +1,6 @@
 export class ColorPicker {
     constructor() {
+        this.isPickerOpened = false;
         this.pickerElem = document.createElement('div');
         this.colorsList = [
             '#ffffff',
@@ -21,11 +22,19 @@ export class ColorPicker {
         ];
         this._selectedColor = this.colorsList[0];
         this.init();
-        this.initHoverHandler();
     }
     init() {
+        this.pickerElem.addEventListener('pointerenter', (event) => {
+            if (!this.isPickerOpened && event.buttons === 0) {
+                this.pickerElem.style.transform = 'translateX(-50%) translateY(0)';
+                this.isPickerOpened = true;
+            }
+        });
         this.pickerElem.addEventListener('pointerleave', (event) => {
-            this.pickerElem.style.transform = 'translateX(-50%) translateY(90%)';
+            if (this.isPickerOpened) {
+                this.pickerElem.style.transform = 'translateX(-50%) translateY(90%)';
+                this.isPickerOpened = false;
+            }
         });
         for (let i = 0; i < this.colorsList.length; i++) {
             const colorTileElem = document.createElement('div');
@@ -58,12 +67,5 @@ export class ColorPicker {
     }
     get selectedColor() {
         return this._selectedColor;
-    }
-    initHoverHandler() {
-        document.addEventListener('pointermove', (event) => {
-            if (event.y > window.innerHeight - 25 && event.buttons === 0) {
-                this.pickerElem.style.transform = 'translateX(-50%) translateY(0)';
-            }
-        });
     }
 }

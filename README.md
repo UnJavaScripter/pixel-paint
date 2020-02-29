@@ -37,8 +37,9 @@ You will learn some use cases of:
 - An app UI
 - Toasts
 
-## Missing
+## Missing / things to do
 
+- Remove listeners
 - Tests
 - Error handling
 - Initial settings

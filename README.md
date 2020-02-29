@@ -27,6 +27,7 @@ You will learn some use cases of:
 - [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
 - [Map object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
 - [Native FileSystem API](https://web.dev/native-file-system/)
+- [Crypto](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues)
 
 ## Roadmap
 

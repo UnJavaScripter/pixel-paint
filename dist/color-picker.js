@@ -25,7 +25,7 @@ export class ColorPicker {
     }
     init() {
         this.pickerElem.addEventListener('pointerleave', (event) => {
-            this.pickerElem.style.display = 'none';
+            this.pickerElem.style.transform = 'translateX(-50%) translateY(90%)';
         });
         for (let i = 0; i < this.colorsList.length; i++) {
             const colorTileElem = document.createElement('div');
@@ -39,12 +39,14 @@ export class ColorPicker {
             this.pickerElem.appendChild(colorTileElem);
         }
         this.pickerElem.style.width = '90%';
-        this.pickerElem.style.display = 'none';
+        this.pickerElem.style.display = 'flex';
         this.pickerElem.style.position = 'fixed';
         this.pickerElem.style.bottom = '0';
         this.pickerElem.style.marginLeft = '50%';
         this.pickerElem.style.marginRight = '50%';
-        this.pickerElem.style.transform = 'translateX(-50%)';
+        this.pickerElem.style.transform = 'translateX(-50%) translateY(90%)';
+        this.pickerElem.style.willChange = 'transform';
+        this.pickerElem.style.transition = 'transform 0.15s cubic-bezier(0,0,0.3,1)';
         if (window.innerWidth < 1080) {
             this.pickerElem.style.width = '100%';
             this.pickerElem.style.flexWrap = 'wrap';
@@ -60,7 +62,7 @@ export class ColorPicker {
     initHoverHandler() {
         document.addEventListener('pointermove', (event) => {
             if (event.y > window.innerHeight - 15 && event.buttons === 0) {
-                this.pickerElem.style.display = 'flex';
+                this.pickerElem.style.transform = 'translateX(-50%) translateY(0)';
             }
         });
     }

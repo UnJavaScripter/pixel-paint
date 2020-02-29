@@ -60,7 +60,7 @@ class PixelPaint {
         }
         this.ctx.fillStyle = color;
         this.ctx.fillRect(pixelXstart, pixelYstart, this.pixelSize, this.pixelSize);
-        this.ctx.fillText(`${pixelXstart}, ${pixelYstart}`, pixelXstart, pixelYstart, 800);
+        // this.ctx.fillText(`${pixelXstart}, ${pixelYstart}`, pixelXstart, pixelYstart, 800);
     }
     drawGrid() {
         this.ctx.fillStyle = '#666';

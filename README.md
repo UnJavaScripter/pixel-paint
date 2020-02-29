@@ -6,6 +6,10 @@ This is an **educational** web based pixel art drawing app using HTML Canvas and
 
 ![Pixel Paint - an HTML canvas drawing web app](https://user-images.githubusercontent.com/7959823/75613676-bf0bc980-5b30-11ea-9c7b-42e80f87beb4.gif)
 
+# DEMO
+
+https://unjavascripter.github.io/pixel-paint/
+
 ## Features
 
 - Basic drawing

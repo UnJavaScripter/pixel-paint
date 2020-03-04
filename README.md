@@ -31,16 +31,17 @@ You will learn some use cases of:
 
 ## Roadmap
 
-- Erasing
-- Undo a whole drawning instead of just the individual pixels
-- Pointer events behaviour (for touch enabled devices)
-- An app UI
-- Toasts
+- [] Erasing
+- [] Undo a whole drawning instead of just the individual pixels
+- [] Pointer events behaviour (for touch enabled devices)
+- [] An app UI
+- [] Toasts
+- [] OffscreenCanvas
 
 ## Missing / things to do
 
-- Remove listeners
-- Tests
-- Error handling
-- Initial settings
-- A11y
+- [] Remove listeners
+- [] Tests
+- [] Error handling
+- [] Initial settings
+- [] A11y

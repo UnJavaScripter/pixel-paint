@@ -1,9 +1,9 @@
 import { DrawAction } from './app'
 
 class HistoryHandler {
-  _history: Map<number, DrawAction>;
+  private _history: Map<number, DrawAction>;
+  private historyRedo: Map<number, DrawAction>;
   historySize = 0;
-  historyRedo: Map<number, DrawAction>;
 
   constructor() {
     this._history = new Map();

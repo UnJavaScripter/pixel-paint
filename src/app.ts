@@ -17,7 +17,6 @@ interface Drawning {
 class PixelPaint {
   canvasElem: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  clicked = false;
   pixelSize: number;
   lastDrawnPixel: any;
   selectedColor: string;
@@ -39,9 +38,6 @@ class PixelPaint {
   }
 
   init() {
-    this.canvasElem.addEventListener('mouseup', () => {
-      this.handleMouseUp();
-    });
 
     this.canvasElem.addEventListener('pointerdown', (event: PointerEvent) => {
       this.handleClick(event);
@@ -58,12 +54,7 @@ class PixelPaint {
     this.drawGrid();
   }
 
-  private handleMouseUp() {
-    this.clicked = false;
-  }
-
   private handleClick(event: MouseEvent) {
-    this.clicked = true;
     this.pointerDraw(event);
   }
 

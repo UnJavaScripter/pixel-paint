@@ -13,7 +13,6 @@ import { saveHandler } from './save.js';
 const colorPicker = new ColorPicker();
 class PixelPaint {
     constructor(pixelSize = 50, width = window.innerWidth, height = window.innerHeight - 4) {
-        this.clicked = false;
         this.canvasElem = document.getElementById('canvas');
         this.ctx = this.canvasElem.getContext('2d');
         this.pixelSize = pixelSize;
@@ -25,9 +24,6 @@ class PixelPaint {
         this.init();
     }
     init() {
-        this.canvasElem.addEventListener('mouseup', () => {
-            this.handleMouseUp();
-        });
         this.canvasElem.addEventListener('pointerdown', (event) => {
             this.handleClick(event);
         });
@@ -39,11 +35,7 @@ class PixelPaint {
         });
         this.drawGrid();
     }
-    handleMouseUp() {
-        this.clicked = false;
-    }
     handleClick(event) {
-        this.clicked = true;
         this.pointerDraw(event);
     }
     handleDrag(event) {

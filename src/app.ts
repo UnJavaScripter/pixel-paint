@@ -40,7 +40,7 @@ class PixelPaint {
   init() {
 
     this.canvasElem.addEventListener('pointerdown', (event: PointerEvent) => {
-      this.handleClick(event);
+      this.handlePointerDown(event);
     });
 
     this.canvasElem.addEventListener('pointermove', (event: PointerEvent) => {
@@ -54,7 +54,7 @@ class PixelPaint {
     this.drawGrid();
   }
 
-  private handleClick(event: MouseEvent) {
+  private handlePointerDown(event: MouseEvent) {
     this.pointerDraw(event);
   }
 
@@ -68,7 +68,6 @@ class PixelPaint {
       const correctedY = event.y - 9;
       this.drawPixel(correctedX, correctedY, colorPicker.selectedColor);
     }
-
   }
 
   private drawPixel(x: number, y: number, color = '#ca0e51', isHistoryEvent = false) {
@@ -112,6 +111,7 @@ class PixelPaint {
     this.ctx.stroke();
   }
 
+  // draw a random x amount of pixels
   ranDraw(pixelAmount: number) {
     let lastX = 0;
     let lastY = 0;

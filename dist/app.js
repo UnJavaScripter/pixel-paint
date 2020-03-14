@@ -81,6 +81,7 @@ class PixelPaint {
         }
         this.ctx.stroke();
     }
+    // draw a random x amount of pixels
     ranDraw(pixelAmount) {
         let lastX = 0;
         let lastY = 0;
